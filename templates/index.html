@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot</title>
+    <!-- 引入 FontAwesome 免费版 CSS -->
+    <link 
+        rel="stylesheet" 
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" 
+        integrity="sha384-jLKHWM8eAiazdDd1kWSJ6DA8jgcbidkxgj7m7P8j33t6Eu3zDzINZzFUouVRpKwc" 
+        crossorigin="anonymous">
+    <!-- 引入自定义样式 -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <!-- 引入 Vue.js -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+</head>
+<body>
+    <div class="container" id="app">
+        <div class="sidebar">
+            <div class="logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M6.94028 2C7.35614 2 7.69326 2.32421 7.69326 2.72414V7.02647C7.69326 7.42641 7.35614 7.75062 6.94028 7.75062C6.52442 7.75062 6.1873 7.42641 6.1873 7.02647V2.72414C6.1873 2.32421 6.52442 2 6.94028 2Z" fill="currentColor"/>
+                    <path d="M6.94028 16.2494C7.35614 16.2494 7.69326 16.5736 7.69326 16.9735V21.2759C7.69326 21.6758 7.35614 22 6.94028 22C6.52442 22 6.1873 21.6758 6.1873 21.2759V16.9735C6.1873 16.5736 6.52442 16.2494 6.94028 16.2494Z" fill="currentColor"/>
+                    <path d="M16.9402 2C17.3561 2 17.6932 2.32421 17.6932 2.72414V7.02647C17.6932 7.42641 17.3561 7.75062 16.9402 7.75062C16.5244 7.75062 16.1873 7.42641 16.1873 7.02647V2.72414C16.1873 2.32421 16.5244 2 16.9402 2Z" fill="currentColor"/>
+                    <path d="M16.9402 16.2494C17.3561 16.2494 17.6932 16.5736 17.6932 16.9735V21.2759C17.6932 21.6758 17.3561 22 16.9402 22C16.5244 22 16.1873 21.6758 16.1873 21.2759V16.9735C16.1873 16.5736 16.5244 16.2494 16.9402 16.2494Z" fill="currentColor"/>
+                </svg>
+            </div>
+            <div class="sidebar-icon" @click="addIcon">+</div>
+            <div class="sidebar-icon">�</div>
+            <div class="sidebar-icon">✉️</div>
+            <div class="sidebar-icon">🔄</div>
+        </div>
+        <div class="main-content">
+            <h1>What can I help you with?</h1>
+            <div class="chat-window">
+                <div class="messages">
+                    {% raw %}
+                    <div v-for="(msg, index) in messages" :key="index" :class="{'user-message': msg.sender === 'user', 'bot-message': msg.sender === 'bot'}">
+                        <span>{{ msg.text }}</span>
+                    </div>
+                    {% endraw %}
+                </div>
+                <div class="search-container">
+                    <input type="text" v-model="userInput" placeholder="Ask chatbot a question..." @keyup.enter="handleSearch">
+                    <div class="search-buttons">
+                        <button @click="attachFile">📎</button>
+                        <button class="project-btn" @click="startProject">enter</button>
+                    </div>
+                </div>
+                <div class="suggestions">
+                    <button class="suggestion-btn" @click="suggest('hello ↗')">hello ↗</button>
+                    <button class="suggestion-btn" @click="suggest('good morning ↗')">good morning ↗</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- <footer>
+        <a href="#">Pricing</a>
+        <a href="#">Enterprise</a>
+        <a href="#">FAQ</a>
+        <a href="#">Legal</a>
+        <a href="#">Privacy</a>
+        <a href="#">Legacy v0</a>
+        <a href="#">Vercel ↗</a>
+    </footer> -->
+
+    <!-- 引入 FontAwesome JS（可选，如果需要使用更多图标功能） -->
+    <script 
+        src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js" 
+        integrity="sha384-rOA1PnstxnOBLzCLMZxTfLQzqaK0Gtb/svwbLyc9GEkKGc91H1HvnRzvPIFhJ3u0" 
+        crossorigin="anonymous">
+    </script>
+
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                userInput: '',
+                messages: []
+            },
+            methods: {
+                addMessage(sender, text) {
+                    this.messages.push({ sender, text });
+                    this.$nextTick(() => {
+                        const chatWindow = this.$el.querySelector('.messages');
+                        chatWindow.scrollTop = chatWindow.scrollHeight;
+                        });
+                    },
+                
+                addIcon() {
+                    alert('添加图标的功能尚未实现。');
+                },
+                attachFile() {
+                    alert('附件功能尚未实现。');
+                },
+                startProject() {
+                    alert('启动项目的功能尚未实现。');
+                },
+                handleSearch() {
+                    const query = this.userInput.trim();
+                    if (query === '') {
+                        this.addMessage('user', '请输入您的问题。');
+                        return;
+                    }
+                    // 添加用户消息
+                    this.addMessage('user', query);
+                    this.userInput = ''; // 清空输入框
+
+                    // 发送请求到后端
+                    fetch('/chat', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: 'message=' + encodeURIComponent(query)
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        // 添加后端响应消息
+                        this.addMessage('bot', data.response);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        this.addMessage('bot', '抱歉，出现了一个错误。');
+                    });
+                },
+                suggest(text) {
+                    this.userInput = text;
+                    this.handleSearch();
+                },
+                addMessage(sender, text) {
+                    this.messages.push({ sender, text });
+                }
+            }
+        });
+    </script>
+</body>
+</html>
