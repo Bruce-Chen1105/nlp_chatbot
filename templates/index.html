@@ -26,10 +26,14 @@
                     <path d="M16.9402 16.2494C17.3561 16.2494 17.6932 16.5736 17.6932 16.9735V21.2759C17.6932 21.6758 17.3561 22 16.9402 22C16.5244 22 16.1873 21.6758 16.1873 21.2759V16.9735C16.1873 16.5736 16.5244 16.2494 16.9402 16.2494Z" fill="currentColor"/>
                 </svg>
             </div>
-            <div class="sidebar-icon" @click="addIcon">+</div>
+            <div class="sidebar-icon" @click="addIcon"><i class="fas fa-plus"></i></div>
+            <div class="sidebar-icon"><i class="fas fa-book"></i></div>
+            <div class="sidebar-icon"><i class="fas fa-envelope"></i></div>
+            <div class="sidebar-icon"><i class="fas fa-sync-alt"></i></div>
+            <!-- <div class="sidebar-icon" @click="addIcon">+</div>
             <div class="sidebar-icon">�</div>
             <div class="sidebar-icon">✉️</div>
-            <div class="sidebar-icon">🔄</div>
+            <div class="sidebar-icon">🔄</div> -->
         </div>
         <div class="main-content">
             <h1>What can I help you with?</h1>
@@ -37,7 +41,12 @@
                 <div class="messages">
                     {% raw %}
                     <div v-for="(msg, index) in messages" :key="index" :class="{'user-message': msg.sender === 'user', 'bot-message': msg.sender === 'bot'}">
-                        <span>{{ msg.text }}</span>
+                        <span class="message-text">{{ msg.text }}</span>
+                        <span 
+                            v-if="msg.sender === 'bot'" 
+                            :class="['intent-label', getIntentClass(msg.intent)]">
+                            {{ getIntentAbbreviation(msg.intent) }}
+                        </span>
                     </div>
                     {% endraw %}
                 </div>
@@ -49,8 +58,8 @@
                     </div>
                 </div>
                 <div class="suggestions">
-                    <button class="suggestion-btn" @click="suggest('hello ↗')">hello ↗</button>
-                    <button class="suggestion-btn" @click="suggest('good morning ↗')">good morning ↗</button>
+                    <button class="suggestion-btn" @click="suggest('hello')">hello</button>
+                    <button class="suggestion-btn" @click="suggest('good morning')">good morning</button>
                 </div>
             </div>
         </div>
@@ -80,8 +89,8 @@
                 messages: []
             },
             methods: {
-                addMessage(sender, text) {
-                    this.messages.push({ sender, text });
+                addMessage(sender, text, intent = '') {
+                    this.messages.push({ sender, text, intent });
                     this.$nextTick(() => {
                         const chatWindow = this.$el.querySelector('.messages');
                         chatWindow.scrollTop = chatWindow.scrollHeight;
@@ -117,20 +126,38 @@
                     })
                     .then(response => response.json())
                     .then(data => {
+                        console.log('后端响应:',data);
                         // 添加后端响应消息
-                        this.addMessage('bot', data.response);
+                        this.addMessage('bot', data.response, data.intent);
                     })
                     .catch(error => {
                         console.error('Error:', error);
-                        this.addMessage('bot', '抱歉，出现了一个错误。');
+                        this.addMessage('bot', '抱歉，出现了一个错误。', 'Error');
                     });
                 },
                 suggest(text) {
                     this.userInput = text;
                     this.handleSearch();
                 },
-                addMessage(sender, text) {
-                    this.messages.push({ sender, text });
+                getIntentClass(intent) {
+                    switch(intent) {
+                        case 'Small Talk':
+                            return 'intent-small-talk';
+                        case 'Question':
+                            return 'intent-question-answering';
+                        case 'Error':
+                            return 'intent-error';
+                        default:
+                            return '';
+                    }
+                },
+                getIntentAbbreviation(intent) {
+                    const mapping = {
+                        'Small Talk': 'ST',
+                        'Question': 'QA',
+                        'Error': 'ER'
+                    };
+                    return mapping[intent] || intent;
                 }
             }
         });

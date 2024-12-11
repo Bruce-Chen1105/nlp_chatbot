@@ -183,10 +183,73 @@ footer a:hover {
     border-radius: 1rem;
 }
 
-.bot-message span {
+/* 只针对消息文本的样式 */
+.bot-message .message-text {
     display: inline-block;
     background-color: #374151;
     color: white;
     padding: 0.5rem 1rem;
     border-radius: 1rem;
+}
+
+/* 意图标签的样式 */
+.intent-label {
+    display: inline-block;
+    margin-left: 10px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    color: #fff;
+}
+
+/* 低饱和度颜色 */
+.intent-small-talk {
+    background-color: #d8ff8f; 
+    color: #403f4c;
+}
+
+.intent-question-answering {
+    background-color: #a3d3fd; /* 更淡的蓝色 */
+    color: #403f4c;
+}
+
+.intent-error {
+    background-color: #f6acc9; /* 淡粉色 */
+    color: #403f4c;
+}
+
+/* 增加意图标签的专用样式优先级 */
+.bot-message .intent-label.intent-small-talk {
+    background-color: #d8ff8f; 
+    color: #403f4c;
+}
+
+.bot-message .intent-label.intent-question-answering {
+    background-color: #a3d3fd; /* 更淡的蓝色 */
+    color: #403f4c;
+}
+
+.bot-message .intent-label.intent-error {
+    background-color: #f6acc9; /* 淡粉色 */
+    color: #403f4c;
+}
+
+.messages::-webkit-scrollbar {
+    width: 8px; /* 滚动条的宽度 */
+}
+
+.messages::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05); /* 滚动条轨道的背景颜色 */
+    border-radius: 4px; /* 圆角 */
+}
+
+.messages::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.2); /* 滚动条滑块的颜色 */
+    border-radius: 4px; /* 圆角 */
+    border: 2px solid rgba(0, 0, 0, 0); /* 透明边框，增加圆角效果 */
+    background-clip: padding-box; /* 确保边框不影响背景 */
+}
+
+.messages::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255, 255, 255, 0.3); /* 滚动条滑块悬停时的颜色 */
 }

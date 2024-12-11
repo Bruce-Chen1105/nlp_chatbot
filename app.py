@@ -25,7 +25,7 @@ def chat():
     else:
         response = "S.A.M: GRRRRRRRRR 我无法理解你的意思 :/ 请重试。"
     
-    return jsonify({'response': response})
+    return jsonify({'response': response, 'intent': intent})
 
 if __name__ == '__main__':
     app.run(debug=True)
