@@ -30,6 +30,7 @@
             <div class="sidebar-icon"><i class="fas fa-book"></i></div>
             <div class="sidebar-icon"><i class="fas fa-envelope"></i></div>
             <div class="sidebar-icon"><i class="fas fa-sync-alt"></i></div>
+            <div class="sidebar-icon" @click="logout"><i class="fas fa-sign-out-alt"></i></div>
             <!-- <div class="sidebar-icon" @click="addIcon">+</div>
             <div class="sidebar-icon">�</div>
             <div class="sidebar-icon">✉️</div>
@@ -51,7 +52,7 @@
                     {% endraw %}
                 </div>
                 <div class="search-container">
-                    <input type="text" v-model="userInput" placeholder="Ask chatbot a question..." @keyup.enter="handleSearch">
+                    <input type="text" v-model="userInput" placeholder="Ask chatbot a question..." @keyup.enter="handleSearch" class="chat-input-field">
                     <div class="search-buttons">
                         <button @click="attachFile">📎</button>
                         <button class="project-btn" @click="startProject">enter</button>
@@ -81,86 +82,95 @@
         crossorigin="anonymous">
     </script>
 
-    <script>
-        new Vue({
-            el: '#app',
-            data: {
-                userInput: '',
-                messages: []
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            userInput: '',
+            messages: []
+        },
+        methods: {
+            addMessage(sender, text, intent = '') {
+                this.messages.push({ sender, text, intent });
+                this.$nextTick(() => {
+                    const chatWindow = this.$el.querySelector('.messages');
+                    chatWindow.scrollTop = chatWindow.scrollHeight;
+                });
             },
-            methods: {
-                addMessage(sender, text, intent = '') {
-                    this.messages.push({ sender, text, intent });
-                    this.$nextTick(() => {
-                        const chatWindow = this.$el.querySelector('.messages');
-                        chatWindow.scrollTop = chatWindow.scrollHeight;
-                        });
-                    },
-                
-                addIcon() {
-                    alert('添加图标的功能尚未实现。');
-                },
-                attachFile() {
-                    alert('附件功能尚未实现。');
-                },
-                startProject() {
-                    alert('启动项目的功能尚未实现。');
-                },
-                handleSearch() {
-                    const query = this.userInput.trim();
-                    if (query === '') {
-                        this.addMessage('user', '请输入您的问题。');
-                        return;
-                    }
-                    // 添加用户消息
-                    this.addMessage('user', query);
-                    this.userInput = ''; // 清空输入框
+            addIcon() {
+                alert('添加图标的功能尚未实现。');
+            },
+            attachFile() {
+                alert('附件功能尚未实现。');
+            },
+            startProject() {
+                alert('启动项目的功能尚未实现。');
+            },
+            handleSearch() {
+                const query = this.userInput.trim();
+                if (query === '') {
+                    this.addMessage('user', '请输入您的问题。');
+                    return;
+                }
+                // 添加用户消息
+                this.addMessage('user', query);
+                this.userInput = ''; // 清空输入框
 
-                    // 发送请求到后端
-                    fetch('/chat', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded'
-                        },
-                        body: 'message=' + encodeURIComponent(query)
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('后端响应:',data);
-                        // 添加后端响应消息
-                        this.addMessage('bot', data.response, data.intent);
+                // 发送请求到后端
+                fetch('/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: 'message=' + encodeURIComponent(query)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('后端响应:', data);
+                    // 添加后端响应消息
+                    this.addMessage('bot', data.response, data.intent);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    this.addMessage('bot', '抱歉，出现了一个错误。', 'Error');
+                });
+            },
+            suggest(text) {
+                this.userInput = text;
+                this.handleSearch();
+            },
+            getIntentClass(intent) {
+                switch(intent) {
+                    case 'Small Talk':
+                        return 'intent-small-talk';
+                    case 'Question':
+                        return 'intent-question-answering';
+                    case 'Error':
+                        return 'intent-error';
+                    default:
+                        return '';
+                }
+            },
+            getIntentAbbreviation(intent) {
+                const mapping = {
+                    'Small Talk': 'ST',
+                    'Question': 'QA',
+                    'Error': 'ER'
+                };
+                return mapping[intent] || intent;
+            },
+            logout() {
+                fetch('/logout')
+                    .then(() => {
+                        window.location.href = '/login';
                     })
                     .catch(error => {
                         console.error('Error:', error);
-                        this.addMessage('bot', '抱歉，出现了一个错误。', 'Error');
+                        alert('登出失败，请稍后再试。');
                     });
-                },
-                suggest(text) {
-                    this.userInput = text;
-                    this.handleSearch();
-                },
-                getIntentClass(intent) {
-                    switch(intent) {
-                        case 'Small Talk':
-                            return 'intent-small-talk';
-                        case 'Question':
-                            return 'intent-question-answering';
-                        case 'Error':
-                            return 'intent-error';
-                        default:
-                            return '';
-                    }
-                },
-                getIntentAbbreviation(intent) {
-                    const mapping = {
-                        'Small Talk': 'ST',
-                        'Question': 'QA',
-                        'Error': 'ER'
-                    };
-                    return mapping[intent] || intent;
-                }
             }
-        });
-    </script>
+        }
+    });
+</script>
 </body>
 </html>

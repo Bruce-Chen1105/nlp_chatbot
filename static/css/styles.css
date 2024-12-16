@@ -64,10 +64,9 @@ h1 {
 }
 
 input[type="text"] {
-    width: 100%;
     padding: 1rem;
-    padding-right: 120px;
-    background-color: rgba(24, 24, 27, 0.5);
+    padding-right: 1px;
+    background-color: #2d3748;
     border: 1px solid #27272a;
     border-radius: 0.375rem;
     color: white;
@@ -252,4 +251,211 @@ footer a:hover {
 
 .messages::-webkit-scrollbar-thumb:hover {
     background-color: rgba(255, 255, 255, 0.3); /* 滚动条滑块悬停时的颜色 */
+}
+
+/* 登录页面样式 */
+.login-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background-color: #111827;
+}
+
+.card {
+    width: 100%;
+    max-width: 400px;
+    background-color: #1f2937;
+    border: 1px solid #374151;
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    margin-bottom: 1rem;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-text h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: white;
+}
+
+.header-text p {
+    margin: 0;
+    color: #d1d5db;
+}
+
+.header-icons i {
+    margin-left: 0.5rem;
+    color: #3b82f6;
+    cursor: pointer;
+}
+
+.header-icons i:hover {
+    color: #2563eb;
+}
+
+.card-content .input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.input-field {
+    padding: 0.75rem;
+    border: 1px solid #374151;
+    border-radius: 4px;
+    background-color: #2d3748;
+    color: white;
+    font-size: 1rem;
+}
+
+.input-field::placeholder {
+    color: #9ca3af;
+}
+
+.login-button {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #2563eb;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.login-button:hover {
+    background-color: #1d4ed8;
+}
+
+/* 术语部分样式 */
+.terms {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    font-size: 0.95rem; /* 增大字体大小 */
+    font-weight: 500; /* 增加字体粗细 */
+    color: #d1d5db; /* 更柔和的文字颜色 */
+}
+
+.terms input {
+    margin-right: 0.5rem;
+    width: 18px;
+    height: 18px;
+    accent-color: #3b82f6; /* 自定义复选框颜色 */
+}
+
+.terms label {
+    display: flex;
+    align-items: center;
+}
+
+.terms label a {
+    color: #3b82f6;
+    text-decoration: none;
+    transition: color 0.3s ease; /* 添加过渡效果 */
+    font-weight: 600; /* 增加链接文字的粗细 */
+}
+
+.terms label a:hover {
+    color: #1d4ed8; /* 悬停时改变颜色 */
+    text-decoration: underline;
+}
+
+/* 附加链接部分样式 */
+.additional-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem; /* 增加链接之间的间距 */
+    font-size: 0.9rem; /* 调整字体大小 */
+    margin-top: 1rem; /* 增加顶部间距 */
+}
+
+.additional-links a {
+    color: #3b82f6;
+    text-decoration: none;
+    position: relative;
+    font-weight: 500; /* 增加链接文字的粗细 */
+    transition: color 0.3s ease, transform 0.3s ease; /* 添加过渡效果 */
+}
+
+.additional-links a::after {
+    content: '';
+    display: block;
+    width: 0;
+    height: 2px;
+    background: #3b82f6;
+    transition: width 0.3s;
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+}
+
+.additional-links a:hover {
+    color: #1d4ed8;
+    transform: translateY(-2px); /* 悬停时略微上移 */
+}
+
+.additional-links a:hover::after {
+    width: 100%; /* 悬停时显示下划线 */
+}
+
+.error-message {
+    color: #ef4444; /* 红色文字 */
+    text-align: center;
+    margin-top: 1rem;
+    background-color: #1f2937; /* 深灰背景，增强可见性 */
+    padding: 0.5rem;
+    border-radius: 4px;
+    font-size: 0.9rem; /* 调整字体大小 */
+}
+
+
+/* 登录页面的输入框样式 */
+.login-input-field {
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid #4b5563; /* 深灰边框 */
+    border-radius: 4px;
+    background-color: #374151; /* 较深的背景色 */
+    color: #f3f4f6; /* 淡灰文字 */
+    font-size: 1rem;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.login-input-field:focus {
+    border-color: #3b82f6; /* 聚焦时边框颜色 */
+    background-color: #4b5563; /* 聚焦时背景色 */
+    outline: none;
+}
+
+
+/* 聊天页面的输入框样式 */
+.chat-input-field {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #6b7280; /* 中等灰边框 */
+    border-radius: 4px;
+    background-color: #1f2937; /* 深灰背景 */
+    color: #d1d5db; /* 淡灰文字 */
+    font-size: 0.95rem;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.chat-input-field:focus {
+    border-color: #2563eb; /* 聚焦时边框颜色 */
+    background-color: #374151; /* 聚焦时背景色 */
+    outline: none;
 }

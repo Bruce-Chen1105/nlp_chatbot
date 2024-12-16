@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录 - Chatbot</title>
+    <!-- 引入 FontAwesome 免费版 CSS -->
+    <link 
+        rel="stylesheet" 
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" 
+        integrity="sha384-jLKHWM8eAiazdDd1kWSJ6DA8jgcbidkxgj7m7P8j33t6Eu3zDzINZzFUouVRpKwc" 
+        crossorigin="anonymous">
+    <!-- 引入自定义样式 -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <!-- 引入 Vue.js -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+</head>
+<body>
+    <div class="login-container" id="login-app">
+        <div class="card">
+            <div class="card-header">
+                <div class="header-content">
+                    <div class="header-text">
+                        <h1>登录后可以与Chatbot畅聊</h1>
+                    </div>
+                    <div class="header-icons">
+                        <i class="fas fa-globe"></i>
+                        <i class="fas fa-message-square"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="card-content">
+                <div class="input-group">
+                    <input 
+                        type="text" 
+                        placeholder="请输入账号" 
+                        v-model="username" 
+                        class="login-input-field">
+                    <input 
+                        type="password" 
+                        placeholder="请输入密码" 
+                        v-model="password" 
+                        class="login-input-field">
+                </div>
+                <button 
+                    type="button"
+                    class="login-button" 
+                    @click="login">
+                    登录
+                </button>
+                <div class="terms">
+                    <input type="checkbox" id="terms" v-model="agreeTerms">
+                    <label for="terms">
+                        登录即代表同意
+                        <a href="/terms">《服务条款》</a>
+                        和
+                        <a href="/privacy">《隐私协议》</a>
+                    </label>
+                </div>
+                <div class="additional-links">
+                    <a href="/forgot-password">忘记密码</a>
+                    <span>|</span>
+                    <a href="/register">立即注册</a>
+                </div>
+                <div v-if="errorMessage" class="error-message">
+                    {{ errorMessage }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        new Vue({
+            el: '#login-app',
+            data: {
+                username: '',
+                password: '',
+                agreeTerms: false,
+                errorMessage: ''
+            },
+            methods: {
+                login() {
+                    if (!this.agreeTerms) {
+                        this.errorMessage = '请同意服务条款和隐私协议。';
+                        return;
+                    }
+                    if (this.username === '' || this.password === '') {
+                        this.errorMessage = '请输入用户名和密码。';
+                        return;
+                    }
+                    // 发送登录请求到后端
+                    fetch('/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: `username=${encodeURIComponent(this.username)}&password=${encodeURIComponent(this.password)}`
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // 登录成功，跳转到主页
+                            window.location.href = '/';
+                        } else {
+                            // 登录失败，显示错误消息
+                            this.errorMessage = data.message;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        this.errorMessage = '发生错误，请稍后再试。';
+                    });
+                }
+            }
+        });
+    </script>
+</body>
+</html>
