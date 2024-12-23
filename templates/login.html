@@ -11,7 +11,7 @@
         integrity="sha384-jLKHWM8eAiazdDd1kWSJ6DA8jgcbidkxgj7m7P8j33t6Eu3zDzINZzFUouVRpKwc" 
         crossorigin="anonymous">
     <!-- 引入自定义样式 -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
     <!-- 引入 Vue.js -->
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 </head>
@@ -81,11 +81,11 @@
             methods: {
                 login() {
                     if (!this.agreeTerms) {
-                        this.errorMessage = '请同意服务条款和隐私协议。';
+                        this.showAlert('请同意服务条款和隐私协议。');
                         return;
                     }
                     if (this.username === '' || this.password === '') {
-                        this.errorMessage = '请输入用户名和密码。';
+                        this.showAlert('请输入用户名和密码。');
                         return;
                     }
                     // 发送登录请求到后端
@@ -103,16 +103,19 @@
                             window.location.href = '/';
                         } else {
                             // 登录失败，显示错误消息
-                            this.errorMessage = data.message;
+                            this.showAlert(data.message);
                         }
                     })
                     .catch(error => {
                         console.error('Error:', error);
-                        this.errorMessage = '发生错误，请稍后再试。';
+                        this.showAlert('发生错误，请稍后再试。');
                     });
+                },
+                showAlert(message) {
+                    alert(message); // 使用浏览器的 alert 弹窗显示错误信息
                 }
             }
         });
-    </script>
+     </script>
 </body>
 </html>

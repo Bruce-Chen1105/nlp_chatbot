@@ -4,6 +4,7 @@ from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+from numpy import unicode_
 
 from pre_processing import pStemmer
    
