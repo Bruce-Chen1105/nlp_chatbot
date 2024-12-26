@@ -90,7 +90,7 @@ input[type="text"]:focus {
 }
 
 .search-buttons button {
-    background: #2563eb;
+    background: #ffffff;
     border: none;
     color: white;
     cursor: pointer;
@@ -446,16 +446,21 @@ footer a:hover {
     width: 100%; /* 悬停时显示下划线 */
 }
 
-.error-message {
-    color: #ef4444; /* 红色文字 */
-    text-align: center;
-    margin-top: 1rem;
-    background-color: #1f2937; /* 深灰背景，增强可见性 */
-    padding: 0.5rem;
-    border-radius: 4px;
-    font-size: 0.9rem; /* 调整字体大小 */
+.logout-button {
+   position: absolute;
+   top: 20px;
+   right: 20px;
+   background-color: #2563eb;
+   color: white;
+   padding: 10px 20px;
+   border-radius: 5px;
+   cursor: pointer;
+   transition: background-color 0.3s ease;
 }
 
+.logout-button:hover {
+   background-color: #1d4ed8;
+}
 
 /* 登录页面的输入框样式 */
 .login-input-field {

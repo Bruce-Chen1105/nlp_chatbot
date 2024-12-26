@@ -31,11 +31,13 @@
             <div class="sidebar-icon"><i class="fas fa-envelope"></i></div>
             <div class="sidebar-icon"><i class="fas fa-sync-alt"></i></div>
             <div class="sidebar-icon" @click="logout"><i class="fas fa-sign-out-alt"></i></div>
-            <!-- <div class="sidebar-icon" @click="addIcon">+</div>
-            <div class="sidebar-icon">�</div>
-            <div class="sidebar-icon">✉️</div>
-            <div class="sidebar-icon">🔄</div> -->
         </div>
+
+        <!-- 添加退出按钮 -->
+        <div class="logout-button" @click="logout">
+            退出
+        </div>
+
         <div class="main-content">
             <h1>What can I help you with?</h1>
             <div class="chat-window">
@@ -160,15 +162,16 @@
                 return mapping[intent] || intent;
             },
             logout() {
-                fetch('/logout')
-                    .then(() => {
-                        window.location.href = '/login';
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('登出失败，请稍后再试。');
-                    });
-            }
+                   fetch('/logout')
+                       .then(() => {
+                           alert('退出成功');
+                           window.location.href = '/login';
+                       })
+                       .catch(error => {
+                           console.error('Error:', error);
+                           alert('登出失败，请稍后再试。');
+                       });
+               }
         }
     });
 </script>
